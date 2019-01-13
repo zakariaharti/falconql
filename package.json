@@ -1,4 +1,11 @@
 {
+  "name": "runql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/zakariaharti/runql.git",
+  "author": "zakariaharti <zakariya.developer@gmail.com>",
+  "license": "MIT",
+  "private": true,
   "dependencies": {
     "koa": "^2.6.2"
   }
