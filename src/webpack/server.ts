@@ -75,4 +75,20 @@ const server: webpack.Configuration = {
     modules: [path.resolve(__dirname, "..", "..", "node_modules")]
   },
   target: "node"
+};
+
+/** merge client with common */
+const mergedServer = merge(common,server);
+
+/** dev config */
+if(process.env.NODE_ENV === 'development'){
+  mergedServer.devtool = 'inline-source-map';
 }
+
+/** prod config */
+if(process.env.NODE_ENV === 'production'){
+  mergedServer.devtool = 'source-map';
+}
+
+// EXPORTS
+export default mergedServer;
