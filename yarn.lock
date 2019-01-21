@@ -45,6 +45,13 @@
   dependencies:
     "@types/webpack" "*"
 
+"@types/webpack-node-externals@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@types/webpack-node-externals/-/webpack-node-externals-1.6.3.tgz#a70ecab38339ab219d0090680c98c4973a90af01"
+  integrity sha512-sIYCMSV4Z1FbxqSKKvhmEnjd1UoZnTBT0VIhoZ0iT8gck7FB1MzJ1eH+yFyOgY65WU4LJBTxj3ySMKKfzfEiCw==
+  dependencies:
+    "@types/webpack" "*"
+
 "@types/webpack@*", "@types/webpack@^4.4.23":
   version "4.4.23"
   resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.4.23.tgz#059d6f4598cfd65ddee0e2db38317ef989696712"
