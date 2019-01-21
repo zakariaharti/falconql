@@ -105,9 +105,9 @@ if(process.env.NODE_ENV === 'production'){
   mergedClient.output.chunkFilename = 'assets/js/[name].[chunkhash].js';
   mergedClient.output.filename = 'assets/js/[name].[chunkhash].js';
 
-  mergedClient.plugins.append(new CompressionPlugin({
-      cache: true,
-      minRatio: 0.99
+  mergedClient.plugins.push(new CompressionPlugin({
+    cache: true,
+    minRatio: 0.99
   }));
 }
 
