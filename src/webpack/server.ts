@@ -17,5 +17,7 @@ const isProdMode = process.env.NODE_ENV === 'production';
 
 // server webpack config
 const server: Configuration = {
-
+  entry: [
+    path.resolve(__dirname,'..','server','server.tsx')
+  ]
 }
