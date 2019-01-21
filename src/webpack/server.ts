@@ -6,7 +6,7 @@
 import * as path from 'path';
 
 /* NPM */
-import * as webpack from 'webpack';
+import {Configuration} from 'webpack';
 import * as nodeModules from "webpack-node-externals";
 import * as merge from 'webpack-merge';
 
@@ -14,3 +14,8 @@ import * as merge from 'webpack-merge';
 import common from './common';
 
 const isProdMode = process.env.NODE_ENV === 'production';
+
+// server webpack config
+const server: Configuration = {
+
+}
