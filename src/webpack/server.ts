@@ -70,5 +70,9 @@ const server: webpack.Configuration = {
       GRAPHQL: JSON.stringify(process.env.GRAPHQL),
       SERVER: true,
     })
-  ]
+  ],
+  resolve: {
+    modules: [path.resolve(__dirname, "..", "..", "node_modules")]
+  },
+  target: "node"
 }
