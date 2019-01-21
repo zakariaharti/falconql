@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es5",
-    "lib": ["es5", "es6", "es7", "es2017", "dom"],
+    "target": "ESNext",
+    "lib": ["es5", "es6", "es7", "es2017", "ESNext", "dom"],
     "sourceMap": true,
     "jsx": "react",
     "moduleResolution": "node",
@@ -18,6 +18,5 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true
   },
-  "include": ["client/**/*","server/**/*","./**/*"],
-  "exclude": ["node_modules", "build", "scripts"]
+  "exclude": ["node_modules", "dist"]
 }
