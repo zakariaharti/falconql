@@ -19,5 +19,6 @@ const isProdMode = process.env.NODE_ENV === 'production';
 const server: Configuration = {
   entry: [
     path.resolve(__dirname,'..','server','server.tsx')
-  ]
+  ],
+  externals: nodeModules(),
 }
