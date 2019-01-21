@@ -6,7 +6,7 @@
 import * as path from 'path';
 
 /* NPM */
-import {Configuration} from 'webpack';
+import * as webpack from 'webpack';
 import * as nodeModules from "webpack-node-externals";
 import * as merge from 'webpack-merge';
 
@@ -17,7 +17,7 @@ import css from "./css";
 const isProdMode = process.env.NODE_ENV === 'production';
 
 // server webpack config
-const server: Configuration = {
+const server: webpack.Configuration = {
   entry: [
     path.resolve(__dirname,'..','server','server.tsx')
   ],
@@ -48,5 +48,27 @@ const server: Configuration = {
         ]
       }
     ]
-  }
+  },
+  name: "server",
+  output: {
+    filename: "../server.js",
+    libraryTarget: "commonjs2",
+    path: path.resolve(__dirname, "..", "..", "dist", "public"),
+    publicPath: "/"
+  },
+  plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
+    }),
+    new webpack.BannerPlugin({
+      banner: `require("source-map-support").install();`,
+      entryOnly: false,
+      include: ["server.js"],
+      raw: true
+    }),
+    new webpack.DefinePlugin({
+      GRAPHQL: JSON.stringify(process.env.GRAPHQL),
+      SERVER: true,
+    })
+  ]
 }
