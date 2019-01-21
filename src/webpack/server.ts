@@ -12,6 +12,7 @@ import * as merge from 'webpack-merge';
 
 /* LOCAL */
 import common from './common';
+import css from "./css";
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
@@ -21,4 +22,31 @@ const server: Configuration = {
     path.resolve(__dirname,'..','server','server.tsx')
   ],
   externals: nodeModules(),
+  module: {
+    rules: [
+      ...css(false),
+      {
+        test: /\.(woff|woff2|(o|t)tf|eot)$/,
+        use: [
+          {
+            loader: "file-loader",
+            query: {
+              name: `assets/img/[name]${isProdMode ? ".[hash]" : ""}.[ext]`
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        use: [
+          {
+            loader: "file-loader",
+            query: {
+              name: `assets/fonts/[name]${isProdMode ? ".[hash]" : ""}.[ext]`
+            }
+          }
+        ]
+      }
+    ]
+  }
 }
