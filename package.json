@@ -8,6 +8,7 @@
   "private": true,
   "dependencies": {
     "koa": "^2.6.2",
+    "koa-router": "^7.4.0",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
     "styled-components": "^4.1.3"
