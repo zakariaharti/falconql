@@ -29,6 +29,7 @@
     "@types/html-webpack-plugin": "^3.2.0",
     "@types/koa-router": "^7.0.38",
     "@types/koa-send": "^4.1.1",
+    "@types/koa-webpack": "^5.0.1",
     "@types/koa__cors": "^2.2.3",
     "@types/mini-css-extract-plugin": "^0.2.0",
     "@types/node": "^10.12.18",
