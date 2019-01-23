@@ -156,3 +156,5 @@ if (buildInfo.isProdMode) {
 }
 
 app.use(staticMiddleware(path.resolve(buildInfo.dist, "..", "public"), false));
+
+app.use(router.allowedMethods()).use(router.routes());
