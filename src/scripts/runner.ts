@@ -129,3 +129,30 @@ export const runner = (): IRunner => {
 };
 
 /** koa router */
+const router = new koaRouter()
+  .get('/hello', async ctx => {
+    ctx.body = 'hello world';
+  })
+  .get("/favicon.ico", async ctx => {
+    ctx.status = 204;
+  });
+
+/** koa instance */
+export const app = new koa();
+
+app.use(koaCors());
+app.use(async (ctx, next) => {
+  try{
+    await next();
+  } catch(e){
+    console.log("Error:", e.message);
+    ctx.status = 500;
+    ctx.body = "There was an error. Please try again later.";
+  };
+});
+
+if (buildInfo.isProdMode) {
+  app.use(staticMiddleware(path.resolve(buildInfo.dist, "public")));
+}
+
+app.use(staticMiddleware(path.resolve(buildInfo.dist, "..", "public"), false));
