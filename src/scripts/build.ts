@@ -14,6 +14,6 @@ import { runner, buildInfo } from "./runner";
 buildInfo.spinner.info(chalk.default.bgBlue("Build mode"));
 
 void (async () => {
-  await runner().build();
+  await runner().build(false);
   buildInfo.spinner.succeed("Finished building");
 })();
