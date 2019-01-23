@@ -7,7 +7,7 @@
 import * as webpack from 'webpack';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as Koa from 'koa';
+import * as koa from 'koa';
 import * as koaSend from 'koa-send';
 import * as koaCors from '@koa/cors';
 import * as koaRouter from 'koa-router';
@@ -19,6 +19,26 @@ import serverConfig from "../webpack/server";
 import staticConfig from "../webpack/static";
 
 // -----------------------------------------------------
+
+/**
+ * static middleware for serving static files
+ */
+const staticMiddleware = (root: string, immutable = true): koa.Middleware => {
+  return async (ctx, next) => {
+    try {
+      if(ctx.path !== '/'){
+        koaSend(ctx, ctx.path, {
+          immutable,
+          root
+        });
+      }
+    } catch (e) {
+
+    }
+
+    return next();
+  }
+}
 
 /**
  * types interface of runner
@@ -107,3 +127,5 @@ export const runner = (): IRunner => {
     build
   };
 };
+
+/** koa router */
