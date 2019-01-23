@@ -89,7 +89,7 @@ export const runner = (): IRunner => {
   const compiler = webpack([serverConfig, clientConfig]);
   const staticCompiler = webpack([staticConfig]);
 
-  const build = (buildStatic = false) => {
+  const build = (buildStatic: boolean = false) => {
     const buildCompiler = buildStatic ? staticCompiler : compiler;
 
     return new Promise(resolve => {
