@@ -21,6 +21,16 @@ interface ICountResolver {
 }
 
 /**
+ * count resolver defaults
+ */
+interface ICountDefaults {
+  state: {
+    count: number;
+    __typename: string;
+  }
+}
+
+/**
  * count feature resolver
  */
 const countResolver: ICountResolver = {
@@ -38,4 +48,17 @@ const countResolver: ICountResolver = {
   }
 };
 
-export default countResolver;
+/**
+ * count feature defaults
+ */
+const countDefaults: ICountDefaults = {
+  state: {
+    count: 0,
+    __typename: "State"
+  }
+}
+
+export default {
+  resolvers: countResolver,
+  defaults: countDefaults
+};
