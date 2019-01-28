@@ -6,7 +6,7 @@ export interface IState {
   count: number;
 }
 
-// 'Root', which contains the 'State' key
+// 'Root', which contains the 'State' ke
 export interface IRoot {
   state: IState;
 }
