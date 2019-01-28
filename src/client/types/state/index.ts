@@ -10,3 +10,7 @@ export interface IState {
 export interface IRoot {
   state: IState;
 }
+
+export interface IIncrementCount {
+  incrementCount: () => void
+}
