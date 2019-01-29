@@ -14,6 +14,10 @@
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "*": ["src/*"]
+    },
     "declaration": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true
