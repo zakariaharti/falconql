@@ -475,6 +475,15 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-router-config@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-router-config/-/react-router-config-1.1.0.tgz#ac910240b8d4d1f1a04e7b48e03d278f39772420"
+  integrity sha512-SaU38QXZKbcU1y2jt0quGtgi3uLwSl5Z2MnjF+hkPqgveWi8635gRiCLKF3eHs/F2I1f5XGXf1RfgfwFJkmjtg==
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
 "@types/react-router-dom@^4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-4.3.1.tgz#71fe2918f8f60474a891520def40a63997dafe04"
