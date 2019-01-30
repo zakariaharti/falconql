@@ -13,7 +13,7 @@ import { HelmetData } from "react-helmet";
 
 // Types
 
-export interface IHtmlProps {
+export interface IRendererProps {
   css?: string;
   helmet: HelmetData;
   html: string;
@@ -24,7 +24,7 @@ export interface IHtmlProps {
   };
 }
 
-export default class Html extends React.PureComponent<IHtmlProps> {
+export default class Renderer extends React.PureComponent<IRendererProps> {
   public render() {
     const { css, helmet, html, scripts, styles } = this.props;
     return (
