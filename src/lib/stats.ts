@@ -7,7 +7,7 @@
 // IMPORTS
 
 /* NPM */
-import lodash from "lodash";
+import * as lodash from "lodash";
 
 // ----------------------------------------------------------------------------
 
@@ -17,6 +17,7 @@ export interface IStats {
   };
 }
 
+// Config for `Stats` instances
 const config = new WeakMap<Stats, IStats>();
 
 export default class Stats {
@@ -26,13 +27,18 @@ export default class Stats {
 
   /* CONSTRUCTOR */
   public constructor(stats: IStats = {}) {
+    // Store a raw copy of the config
     config.set(this, stats);
   }
 
+  /* GETTERS */
+
+  // Get the full, raw stats
   public get raw(): any {
     return config.get(this)!;
   }
 
+  // Get main built asset based on file extension
   public main(ext: string): string | undefined {
     const main: string | string[] = lodash.get(
       config.get(this)!,
@@ -43,5 +49,21 @@ export default class Stats {
       c.endsWith(`.${ext}`)
     );
     return file && `/${file}`;
+  }
+
+  public scripts(): string[] {
+    const initial = this.raw.chunks.find((chunk: any) => chunk.initial);
+
+    const scripts: string[] = initial.siblings
+      .map((sibling: any) =>
+        this.raw.chunks.find((chunk: any) => chunk.id === sibling)
+      )
+      .map((sibling: any) => sibling.files)
+      .concat(initial.files)
+      .flat()
+      .filter((file: string) => file.endsWith(".js"))
+      .map((file: string) => `/${file}`);
+
+    return scripts;
   }
 }
