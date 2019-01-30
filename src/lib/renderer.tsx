@@ -48,6 +48,15 @@ export default class Renderer extends React.PureComponent<IRendererProps> {
         </head>
         <body {...helmet.bodyAttributes.toComponent()}>
           <div id="root" dangerouslySetInnerHTML={{ __html: html }} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: Object.keys(window).reduce(
+                (out, key) =>
+                  (out += `window.${key}=${JSON.stringify(window[key])};`),
+                ""
+              )
+            }}
+          />
         </body>
         {scripts.map(script => (
           <script key={script} src={script} />
