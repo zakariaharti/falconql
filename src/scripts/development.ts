@@ -5,30 +5,18 @@
 
 /* NPM */
 import * as chalk from "chalk";
-import * as KoaWebpack from "koa-webpack";
 
 /* Local */
-import { buildInfo, app, runner } from "./runner";
+// import hotServerMiddleware from "../lib/hotServerMiddleware";
+import { app, common, compiler, devServer } from "./app";
 
 // ----------------------------------------------------------------------------
 
-buildInfo.spinner
+common.spinner
   .info(chalk.default.magenta("Development mode"))
   .info("Building development server...");
 
-app.listen({ port: buildInfo.port, host: 'localhost'}, async () => {
-  const koaWebpackMiddleware = await KoaWebpack({
-    compiler: runner().compiler as any,
-    devMiddleware: {
-      logLevel: "info",
-      publicPath: "/",
-      stats: false
-    }
-  });
-
-  app.use(koaWebpackMiddleware);
-
-  (runner().compiler as any).hooks.done.tap("built", () => {
-    buildInfo.spinner.succeed(`Running on http://localhost:${buildInfo.port}`);
-  });
+app.listen({ port: common.port, host: "localhost" }, async () => {
+  await devServer(app, compiler);
+  // app.use(hotServerMiddleware(compiler));
 });
