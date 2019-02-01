@@ -55,7 +55,7 @@ const config: Configuration = {
             }
           },
           {
-            loader: 'awesome-typescript-loader',
+            loader: 'ts-loader',
             options: {
               configFileName
             }
