@@ -1,22 +1,34 @@
-// WEBPACK (static)
-// -------------------------------------------------------
+// Webpack (static bundling)
 
+// ----------------------------------------------------------------------------
 // IMPORTS
 
-/** NPM */
+/* NPM */
+import * as webpack from "webpack";
+// import {} from "webpack-dev-server";
+
+// Plugin for generating `index.html` file for static hosting
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
 
-/** LOCAL */
-import client from './client';
+/* Local */
 
-// -------------------------------------------------------
+// Common config
+import merge from "webpack-merge";
 
-client.plugins.push(
-  new HtmlWebpackPlugin({
-    inject: false,
-    template: "src/views/static.html",
-    title: "FalconQl app"
-  })
-);
+// Get the client-side config as a base to extend
+import client from "./client";
 
-export default client;
+// ----------------------------------------------------------------------------
+
+// Augment client-side config with HtmlWebPackPlugin
+const base: webpack.Configuration = {
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: false,
+      template: "src/views/static.html",
+      title: "FalconQL app"
+    })
+  ]
+};
+
+export default merge(client, base);
