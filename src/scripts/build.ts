@@ -7,13 +7,13 @@
 import * as chalk from "chalk";
 
 /* Local */
-import { runner, buildInfo } from "./runner";
+import { build, common } from "./app";
 
 // ----------------------------------------------------------------------------
 
-buildInfo.spinner.info(chalk.default.bgBlue("Build mode"));
+common.spinner.info(chalk.default.bgBlue("Build mode"));
 
-(async () => {
-  await runner().build(false);
-  buildInfo.spinner.succeed("Finished building");
+void (async () => {
+  await build();
+  common.spinner.succeed("Finished building");
 })();
