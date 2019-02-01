@@ -16,7 +16,7 @@ if (!process.env.RUNNER) {
 }
 
 // Path to runner
-const script = path.resolve("./src/runner", `${process.env.RUNNER!}.ts`);
+const script = path.resolve("./src/scripts", `${process.env.RUNNER!}.ts`);
 
 // Check that the runner exists
 if (!fs.existsSync(script)) {
