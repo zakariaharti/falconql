@@ -11,7 +11,7 @@ import * as koa from 'koa';
 import * as koaSend from 'koa-send';
 import * as koaCors from '@koa/cors';
 import * as koaRouter from 'koa-router';
-import ora from 'ora';
+import * as ora from 'ora';
 
 /** LOCAL */
 import clientConfig from "../webpack/client";
