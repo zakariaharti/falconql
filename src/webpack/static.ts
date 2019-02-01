@@ -13,7 +13,7 @@ import * as HtmlWebpackPlugin from "html-webpack-plugin";
 /* Local */
 
 // Common config
-import merge from "webpack-merge";
+import * as merge from "webpack-merge";
 
 // Get the client-side config as a base to extend
 import client from "./client";
