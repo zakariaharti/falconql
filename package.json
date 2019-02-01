@@ -96,9 +96,9 @@
     "build:production": "cross-env RUNNER=build NODE_ENV=production ts-node index.ts",
     "build:static": "cross-env RUNNER=static NODE_ENV=production ts-node index.ts",
     "clean": "rimraf dist",
-    "dev": "cross-env RUNNER=dev NODE_ENV=development ts-node index.ts",
+    "dev": "cross-env RUNNER=development NODE_ENV=development ts-node index.ts",
     "dev:static": "cross-env RUNNER=static NODE_ENV=development ts-node index.ts",
-    "production": "cross-env RUNNER=prod NODE_ENV=production ts-node index.ts",
+    "production": "cross-env RUNNER=production NODE_ENV=production ts-node index.ts",
     "production:clean": "npm run clean && npm run production",
     "start": "npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
