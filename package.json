@@ -1,9 +1,10 @@
 {
-  "name": "runql",
+  "name": "FalconQl",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/zakariaharti/runql.git",
+  "repository": "https://github.com/zakariaharti/falconql.git",
   "author": "zakariaharti <zakariya.developer@gmail.com>",
+  "description": "Isomporphic React GraphQl Boilerplate",
   "license": "MIT",
   "private": true,
   "dependencies": {
@@ -86,5 +87,16 @@
     "webpack": "^4.29.0",
     "webpack-merge": "^4.2.1",
     "webpack-node-externals": "^1.7.2"
+  },
+  "scripts": {
+    "build:production": "cross-env RUNNER=build NODE_ENV=production ts-node index.ts",
+    "build:static": "cross-env RUNNER=static NODE_ENV=production ts-node index.ts",
+    "clean": "rimraf dist",
+    "dev": "cross-env RUNNER=development NODE_ENV=development ts-node index.ts",
+    "dev:static": "cross-env RUNNER=static NODE_ENV=development ts-node index.ts",
+    "production": "cross-env RUNNER=production NODE_ENV=production ts-node index.ts",
+    "production:clean": "npm run clean && npm run production",
+    "start": "npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
