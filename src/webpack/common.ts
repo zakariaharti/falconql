@@ -14,7 +14,7 @@ import {Configuration} from "webpack";
 // ----------------------------------------------------------------
 
 const root = path.resolve(__dirname, "..", "..");
-const configFileName = path.resolve(root,'tsconfig.json');
+//const configFileName = path.resolve(root,'tsconfig.json');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
@@ -56,9 +56,6 @@ const config: Configuration = {
           },
           {
             loader: 'ts-loader',
-            options: {
-              configFileName
-            }
           }
         ]
       }
