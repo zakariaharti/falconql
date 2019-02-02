@@ -11,8 +11,8 @@ const nodeModules = require("webpack-node-externals");
 const merge = require('webpack-merge');
 
 /* LOCAL */
-import common from './common';
-import css from "./css";
+const common = require('./common');
+const css =  require('./css');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 

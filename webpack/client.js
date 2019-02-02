@@ -13,7 +13,7 @@ const merge = require('webpack-merge');
 
 /* LOCAL */
 const common = require('./common');
-import css =  require('./css');
+const css =  require('./css');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
