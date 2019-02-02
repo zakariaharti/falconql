@@ -112,4 +112,4 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 // EXPORTS
-export default mergedClient;
+module.exports = mergedClient;
