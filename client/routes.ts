@@ -7,7 +7,7 @@
 import { RouteConfig } from 'react-router-config';
 
 /** LOCAL */
-import App from './App/App';
+import App from './modules/App/App';
 
 // -----------------------------------------------------------------------------
 
