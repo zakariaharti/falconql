@@ -5,32 +5,11 @@
 
 /* NPM */
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
-import { Loader } from "webpack";
 
 // ----------------------------------------------------------------------------
 
-// Types
-type ModuleSettings = [string, { modules: boolean }];
-
-export interface IPostCSSConfig {
-  exec?: boolean;
-  parser?: string | object;
-  syntax?: string | object;
-  plugins?: any[] | ((loader: any) => any[]);
-  sourceMap?: string | boolean;
-}
-
-export interface IStylesConfig {
-  postcss?: boolean | IPostCSSConfig;
-}
-
-export interface IRule {
-  ext: string;
-  use: Loader[];
-}
-
 // Returns string RegEx and modules settings based on style file extension
-function getExtensionSettings(ext: string): ModuleSettings[] {
+function getExtensionSettings(ext) {
   return [
     [`^(?!.*\\.global\\.${ext}$).*\\.${ext}$`, { modules: true }],
     [`\\.global\\.${ext}$`, { modules: false }]
@@ -38,7 +17,7 @@ function getExtensionSettings(ext: string): ModuleSettings[] {
 }
 
 // Rules configuration for each style file extension
-export const rules: IRule[] = [
+export const rules = [
   {
     ext: "css",
     use: []
