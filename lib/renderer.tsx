@@ -1,67 +1,56 @@
-// Server-side HTML render
+import { Helmet } from 'react-helmet';
+import { ServerStyleSheet } from 'styled-components';
 
-// Component to render the full HTML response in React
+const isProdMode = process.env.NODE_ENV === 'production' || false;
 
-// ----------------------------------------------------------------------------
-// IMPORTS
+/**
+ * render full page HTML markup
+ *
+ * @param {string} html
+ * @param {object} initialState
+ */
+export const renderer = (
+  html: string,
+  ReduxState: any,
+  apolloState: any,
+  sheet: ServerStyleSheet
+) => {
+  const helmet = Helmet.renderStatic();
 
-/* NPM */
-import * as React from "react";
-import { HelmetData } from "react-helmet";
+  // Import Manifests
+  const assetsManifest = process.env.webpackAssets && JSON.parse(process.env.webpackAssets);
+  const chunkManifest = process.env.webpackChunkAssets && JSON.parse(process.env.webpackChunkAssets);
+  const assetsFilename = typeof assetsManifest !== 'undefined'
+     ? assetsManifest['/assets/css/styles.css']
+     : '/assets/css/styles.css';
+  const cssFileName = isProdMode ? 'assets/css/styles.css' : assetsFilename;
 
-// ----------------------------------------------------------------------------
+  const htmlMarkup = `
+    <!doctype html>
+    <html ${helmet.htmlAttributes.toString()}>
+      <head>
+         ${helmet.base.toString()}
+         ${helmet.meta.toString()}
+         ${helmet.title.toString()}
+         ${helmet.link.toString()}
+         ${helmet.script.toString()}
+         ${sheet.getStyleTags()}
+         <link rel="stylesheet" href="${cssFileName}"></link>
+      </head>
+      <body ${helmet.bodyAttributes.toString()}>
+        <div id="root">${html}</div>
+        <script>
+          window.__INITIAL_STATE__ = ${JSON.stringify(ReduxState)};
+          window.__APOLLO_STATE__ = ${JSON.stringify(apolloState)};
+          ${isProdMode ?
+          `//<![CDATA[
+            window.webpackManifest = ${JSON.stringify(chunkManifest)};
+          //]]>` : ''}
+        </script>
+        <script src='${isProdMode ? assetsManifest['/main.bundle.js'] : '/main.bundle.js'}'></script>
+      </body>
+    </html>
+  `;
 
-// Types
-
-export interface IRendererProps {
-  css?: string;
-  helmet: HelmetData;
-  html: string;
-  scripts: string[];
-  styles?: Array<React.ReactElement<{}>>;
-  window?: {
-    [key: string]: object;
-  };
-}
-
-export default class Renderer extends React.PureComponent<IRendererProps> {
-  public render() {
-    const { css, helmet, html, scripts, styles } = this.props;
-    return (
-      <html
-        lang="en"
-        {...helmet.htmlAttributes.toString()}
-      >
-        <head>
-          {helmet.title.toComponent()}
-          <meta charSet="utf-8" />
-          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          <meta httpEquiv="Content-Language" content="en" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          {helmet.meta.toComponent()}
-          {helmet.style.toComponent()}
-          {helmet.link.toComponent()}
-          {css && <link rel="stylesheet" href={css} />}
-          {styles}
-          {helmet.script.toComponent()}
-          {helmet.noscript.toComponent()}
-        </head>
-        <body {...helmet.bodyAttributes.toComponent()}>
-          <div id="root" dangerouslySetInnerHTML={{ __html: html }} />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: Object.keys(window).reduce(
-                (out, key) =>
-                  (out += `window.${key}=${JSON.stringify(window[key])};`),
-                ""
-              )
-            }}
-          />
-        </body>
-        {scripts.map(script => (
-          <script key={script} src={script} />
-        ))}
-      </html>
-    );
-  }
+  return htmlMarkup;
 }
