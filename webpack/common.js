@@ -8,18 +8,15 @@
 /** NODE */
 import * as path from "path";
 
-/** NPM */
-import {Configuration} from "webpack";
-
 // ----------------------------------------------------------------
 
-const root = path.resolve(__dirname, "..", "..");
-//const configFileName = path.resolve(root,'tsconfig.json');
+const root = path.resolve(__dirname, "..");
+const configFileName = path.resolve(root,'tsconfig.json');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
 // common config
-const config: Configuration = {
+const config = {
   mode: isProdMode ? 'production' : 'development',
   module: {
     rules: [
@@ -55,7 +52,10 @@ const config: Configuration = {
             }
           },
           {
-            loader: 'ts-loader',
+            loader: 'awesome-typescript-loader',
+            options: {
+              configFileName
+            }
           }
         ]
       }
@@ -66,9 +66,6 @@ const config: Configuration = {
   },
 
   resolve: {
-    alias: {
-      "@": path.resolve(root, "src")
-    },
     extensions: [".ts", ".tsx", ".jsx", ".js", ".json"],
     modules: [path.resolve(root, "node_modules")]
   }
