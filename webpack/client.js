@@ -3,22 +3,22 @@
 // IMPORTS
 
 /* NODE */
-import * as path from 'path';
+const path = require('path');
 
 /* NPM */
-import * as webpack from 'webpack';
-import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import * as CompressionPlugin from "compression-webpack-plugin";
-import * as merge from 'webpack-merge';
+const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
+const merge = require('webpack-merge');
 
 /* LOCAL */
-import common from './common';
-import css, {rules} from './css';
+const common = require('./common');
+import css =  require('./css');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
 // webpack client config
-const client: webpack.Configuration = {
+const client = {
   entry: [
     path.resolve(__dirname,'..','client','client.tsx')
   ],
@@ -67,7 +67,7 @@ const client: webpack.Configuration = {
           enforce: true,
           name: "main",
           test: new RegExp(
-            `\\.${rules.map(rule => `(${rule.ext})`).join("|")}$`
+            `\\.${css.ules.map(rule => `(${rule.ext})`).join("|")}$`
           )
         }
       }
