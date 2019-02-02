@@ -72,4 +72,4 @@ const config = {
 }
 
 // exports
-export default config;
+module.exports = config;
