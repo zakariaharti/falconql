@@ -6,7 +6,7 @@
 // IMPORTS
 
 /** NODE */
-import * as path from "path";
+const path = require('path');
 
 // ----------------------------------------------------------------
 
