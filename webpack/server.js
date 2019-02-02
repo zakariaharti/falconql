@@ -12,12 +12,12 @@ const merge = require('webpack-merge');
 
 /* LOCAL */
 const common = require('./common');
-const css =  require('./css');
+const {css} =  require('./css');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
 // server webpack config
-const server: webpack.Configuration = {
+const server = {
   entry: [
     path.resolve(__dirname,'..','server','server.tsx')
   ],
@@ -91,4 +91,4 @@ if(process.env.NODE_ENV === 'production'){
 }
 
 // EXPORTS
-export default mergedServer;
+module.exports =  mergedServer;
