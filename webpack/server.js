@@ -3,12 +3,12 @@
 // IMPORTS
 
 /* NODE */
-import * as path from 'path';
+const path = require('path');
 
 /* NPM */
-import * as webpack from 'webpack';
-import * as nodeModules from "webpack-node-externals";
-import * as merge from 'webpack-merge';
+const webpack = require('webpack');
+const nodeModules = require("webpack-node-externals");
+const merge = require('webpack-merge');
 
 /* LOCAL */
 import common from './common';
