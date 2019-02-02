@@ -11,8 +11,8 @@ import * as ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 
 /* Local */
-import App from './App/App';
-import { createClient } from '@/client/graphql';
+import App from './modules/App/App';
+import { createClient } from './graphql';
 
 // ----------------------------------------------------------------------------
 
