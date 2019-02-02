@@ -4,7 +4,7 @@
 // IMPORTS
 
 /* NPM */
-import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // ----------------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ function getExtensionSettings(ext) {
 }
 
 // Rules configuration for each style file extension
-export const rules = [
+const rules = [
   {
     ext: "css",
     use: []
@@ -45,7 +45,7 @@ export const rules = [
 const isProduction = process.env.NODE_ENV === "production";
 
 // Create generator to get rules
-export default function* css(isClient = true) {
+exports.css = function (isClient = true) {
   // Source maps depend on us being in development
   const sourceMap = !isProduction;
 
@@ -114,4 +114,6 @@ export default function* css(isClient = true) {
       };
     }
   }
-}
+};
+
+module.exports = rules;
