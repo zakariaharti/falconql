@@ -14,7 +14,7 @@ import { createGlobalStyle }  from 'styled-components';
 /** LOCAL */
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
-import { routes } from '../routes';
+import { routes } from '../../routes';
 
 // -----------------------------------------------------------------------------
 
