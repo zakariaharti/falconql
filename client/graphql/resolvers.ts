@@ -4,7 +4,7 @@
 // IMPORTS
 
 /** NPM */
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /** LOCAL */
 import countResolver from './count/resolver';
