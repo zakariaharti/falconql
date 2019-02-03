@@ -27,7 +27,7 @@ const client = {
   name: 'client',
   module: {
     rules: [
-      ...css(),
+      //...css(),
       {
         test: /\.(woff|woff2|(o|t)tf|eot)$/,
         use: [

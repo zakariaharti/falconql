@@ -24,7 +24,7 @@ const server = {
   externals: nodeModules(),
   module: {
     rules: [
-      ...css(false),
+      //...css(false),
       {
         test: /\.(woff|woff2|(o|t)tf|eot)$/,
         use: [
