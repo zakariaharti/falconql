@@ -110,7 +110,7 @@ exports.css = function* (isClient = true) {
         test: new RegExp(test),
 
         // Remove all falsy values
-        use: use.filter(l => l) as Loader[]
+        use: use.filter(l => l)
       };
     }
   }
