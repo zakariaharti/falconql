@@ -98,14 +98,15 @@
     "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
-    "build:production": "cross-env RUNNER=build NODE_ENV=production ts-node index.ts",
-    "build:static": "cross-env RUNNER=static NODE_ENV=production ts-node index.ts",
-    "clean": "rimraf dist",
-    "dev": "cross-env RUNNER=development NODE_ENV=development ts-node index.ts",
-    "dev:static": "cross-env RUNNER=static NODE_ENV=development ts-node index.ts",
-    "production": "cross-env RUNNER=production NODE_ENV=production ts-node index.ts",
-    "production:clean": "npm run clean && npm run production",
-    "start": "npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test PORT=8080 jest",
+    "test:watch": "npm run test --watchAll",
+    "test:coverage": "npm run test --coverage",
+    "start": "cross-env NODE_ENV=development PORT=6000 nodemon index.ts",
+    "start:prod": "cross-env NODE_ENV=production ts-node index.ts",
+    "bs": "npm run clean && npm run build && npm run build:server && npm run start:prod",
+    "lint": "tslint -e node_modules",
+    "clean": "rimraf build",
+    "build": "cross-env NODE_ENV=production webpack --config webpack/client.js",
+    "build:server": "cross-env NODE_ENV=production webpack --config webpack/server.js"
   }
 }
