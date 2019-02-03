@@ -45,7 +45,7 @@ const rules = [
 const isProduction = process.env.NODE_ENV === "production";
 
 // Create generator to get rules
-exports.css = function (isClient = true) {
+exports.css = function* (isClient = true) {
   // Source maps depend on us being in development
   const sourceMap = !isProduction;
 
