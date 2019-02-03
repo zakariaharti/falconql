@@ -1,28 +1,21 @@
-import * as path from "path";
-import * as fs from "fs";
-
-// Load env vars, for the `GRAPHQL` endpoint and anything else we need
-require("dotenv").config();
+/**
+ * Entry of the application
+ */
 
 // Catch CTRL/CMD+C interrupts cleanly
 process.on("SIGINT", () => {
   process.exit(0);
 });
 
-// Check that we have a specified Webpack runner
-if (!process.env.RUNNER) {
-  console.error("No Webpack runner specified");
-  process.exit(1);
+/**
+ * Entry Script
+ */
+
+if (process.env.NODE_ENV === 'production') {
+  process.env.webpackAssets = JSON.stringify(require('./dist/client/manifest.json'));
+  process.env.webpackChunkAssets = JSON.stringify(require('./dist/client/chunk-manifest.json'));
+  // In production, serve the webpacked server file.
+  require('./build/server.bundle.js');
+} else {
+  require('./server/server.tsx');
 }
-
-// Path to runner
-const script = path.resolve("./src/scripts", `${process.env.RUNNER!}.ts`);
-
-// Check that the runner exists
-if (!fs.existsSync(script)) {
-  console.error(`Runner doesn't exist: ${script}`);
-  process.exit(1);
-}
-
-// Start the script
-require(script);
