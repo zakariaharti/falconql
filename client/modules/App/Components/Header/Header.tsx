@@ -7,7 +7,7 @@
 import * as React from 'react';
 
 /** LOCAL */
-import styled from '@cl/helpers/styledComponents';
+import styled from '../../../../helpers/styledComponents';
 
 // -----------------------------------------------------------------------------
 
