@@ -13,6 +13,7 @@ import { StaticRouter } from "react-router";
 import * as Koa from "koa";
 import * as koaCors from "@koa/cors";
 import * as KoaRouter from "koa-router";
+// @ts-ignore
 import * as webpack from "webpack";
 import * as KoaWebpack from "koa-webpack";
 import { ServerStyleSheet, StyleSheetManager } from "styled-components";
