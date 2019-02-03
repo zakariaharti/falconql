@@ -26,7 +26,6 @@ export const renderer = (
   const cssFileName = isProdMode ? 'assets/css/styles.css' : assetsFilename;
 
   const htmlMarkup = `
-    <!doctype html>
     <html ${helmet.htmlAttributes.toString()}>
       <head>
          ${helmet.base.toString()}
@@ -47,7 +46,7 @@ export const renderer = (
             window.webpackManifest = ${JSON.stringify(chunkManifest)};
           //]]>` : ''}
         </script>
-        <script src='${isProdMode ? assetsManifest['/main.bundle.js'] : '/main.bundle.js'}'></script>
+        <script src='${isProdMode ? assetsManifest['/main.js'] : '/main.js'}'></script>
       </body>
     </html>
   `;

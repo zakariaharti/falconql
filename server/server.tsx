@@ -25,6 +25,8 @@ import { renderer } from "../lib/renderer";
 
 // ----------------------------------------------------------------------------
 const isProdMode = process.env.NODE_ENV === 'production' || false;
+const port = process.env.PORT || 4000;
+const host = process.env.HOST || 'localhost';
 
 // Router
 const router = new KoaRouter()
@@ -36,25 +38,25 @@ const router = new KoaRouter()
   });
 
 // Koa instance
-export const app = new Koa()
+const app = new Koa()
 
   // CORS
-  .use(koaCors())
+app.use(koaCors());
 
   // Error catcher
-  .use(async (ctx, next) => {
-    try {
-      await next();
-    } catch (e) {
-      console.log("Error:", e);
-      ctx.status = 500;
-      ctx.body = "There was an error. Please try again later.";
-    }
-  });
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (e) {
+    console.log("Error:", e);
+    ctx.status = 500;
+    ctx.body = "There was an error. Please try again later.";
+  }
+});
 
 app.use(router.allowedMethods()).use(router.routes());
 
-// in development mode
+// in development mode use webpack-dev-server
 if (!isProdMode) {
    const webpack = require('webpack');
    const config = require('../webpack/client.js');
@@ -139,4 +141,9 @@ app.use(async (ctx: Context) => {
   ctx.type = "text/html";
   ctx.status = 200;
   ctx.body = `${finalView}`;
+});
+
+// start listening
+app.listen({ port, host}, () => {
+  console.log(`Server running on ${host}:${port}`);
 });
