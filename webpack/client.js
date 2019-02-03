@@ -10,6 +10,8 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
 const merge = require('webpack-merge');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 
 /* LOCAL */
 const common = require('./common');
@@ -105,10 +107,19 @@ if(process.env.NODE_ENV === 'production'){
   mergedClient.output.chunkFilename = 'assets/js/[name].[chunkhash].js';
   mergedClient.output.filename = 'assets/js/[name].[chunkhash].js';
 
-  mergedClient.plugins.push(new CompressionPlugin({
-    cache: true,
-    minRatio: 0.99
-  }));
+  mergedClient.plugins.push(
+    new CompressionPlugin({
+      cache: true,
+      minRatio: 0.99
+    },
+    new ManifestPlugin({
+      basePath: '/',
+    }),
+    new ChunkManifestPlugin({
+      filename: "chunk-manifest.json",
+      manifestVariable: "webpackManifest",
+    }),
+  ));
 }
 
 // EXPORTS
