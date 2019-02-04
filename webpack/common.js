@@ -1,71 +1,61 @@
-/*
- * webpack common configuration
- */
-
-// ----------------------------------------------------------------
-// IMPORTS
-
-/** NODE */
+const webpack = require('webpack');
 const path = require('path');
 
-// ----------------------------------------------------------------
-
-const root = path.resolve(__dirname, "..");
-const configFileName = path.resolve(root,'tsconfig.json');
-
-const isProdMode = process.env.NODE_ENV === 'production';
-
-// common config
 const config = {
-  mode: isProdMode ? 'production' : 'development',
   module: {
     rules: [
       {
-        test: /\.(j|t)sx?$/,
+        test: /\.(ts|tsx)$i/,
+        enforce: 'pre',
+        use: [
+          {
+            loader: 'tslint-loader',
+          }
+        ]
+      },
+      {
+        test: /\.(tsx|ts|js|jsx)$/,
+        exclude: /node_modules/,
         use: [
           {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
+              babelrc: false,
+              presets: [
+                "@babel/preset-react",
+              ],
               plugins: [
-                "@babel/plugin-syntax-dynamic-import",
                 [
-                  "@babel/plugin-proposal-decorators",
+                  '@babel/plugin-syntax-decorators',
                   {
-                    legacy: true
+                    decoratorsBeforeExport: true
                   }
                 ],
+                '@babel/plugin-syntax-jsx',
+                'react-hot-loader/babel',
                 [
-                  "@babel/plugin-proposal-class-properties",
+                  'babel-plugin-styled-components',
                   {
-                    loose: true
-                  }
-                ],
-                "react-hot-loader/babel",
-                [
-                  "babel-plugin-styled-components",
-                  {
-                    displayName: !isProdMode
+                    displayName: process.env.NODE_ENV !== 'procuction'
                   }
                 ]
               ]
             }
           },
           {
-            loader: 'ts-loader',
+            loader: 'awesome-typescript-loader'
           }
         ]
       }
     ]
   },
   output: {
-      publicPath: "/"
+    publicPath: '/'
   },
-
   resolve: {
-    extensions: [".ts", ".tsx", ".jsx", ".js", ".json"],
-  }
-}
+     extensions: [".mjs", ".ts", ".tsx", ".jsx", ".js", ".json"],
+   },
+};
 
-// exports
 module.exports = config;
