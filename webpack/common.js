@@ -52,10 +52,7 @@ const config = {
             }
           },
           {
-            loader: 'awesome-typescript-loader',
-            options: {
-              configFileName
-            }
+            loader: 'ts-loader',
           }
         ]
       }
@@ -67,7 +64,6 @@ const config = {
 
   resolve: {
     extensions: [".ts", ".tsx", ".jsx", ".js", ".json"],
-    modules: [path.resolve(root, "node_modules")]
   }
 }
 
