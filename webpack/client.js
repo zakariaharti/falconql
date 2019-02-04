@@ -15,7 +15,7 @@ const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 
 /* LOCAL */
 const common = require('./common');
-const {css, rules} =  require('./css');
+// const {css, rules} =  require('./css');
 
 const isProdMode = process.env.NODE_ENV === 'production';
 
