@@ -1,94 +1,148 @@
-// WEBPACK (server)
-// --------------------------------------------------------
-// IMPORTS
-
-/* NODE */
-const path = require('path');
-
-/* NPM */
 const webpack = require('webpack');
-const nodeModules = require("webpack-node-externals");
 const merge = require('webpack-merge');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const nodeModules = require('webpack-node-externals');
 
-/* LOCAL */
-const common = require('./common');
-const {css} =  require('./css');
+const common = require('./webpack.common');
 
-const isProdMode = process.env.NODE_ENV === 'production';
-
-// server webpack config
-const server = {
+const config = merge(common,{
+  mode: 'production',
+  devtool: "source-map",
   entry: [
-    path.resolve(__dirname,'..','server','server.tsx')
+    path.resolve(__dirname,'server','server.tsx')
   ],
+  output: {
+    filename: "server.js",
+    libraryTarget: "commonjs2",
+    path: path.resolve(__dirname, "build", "public"),
+    publicPath: "/",
+  },
   externals: nodeModules(),
   module: {
     rules: [
-      //...css(false),
       {
-        test: /\.(woff|woff2|(o|t)tf|eot)$/,
+        test: /\.css$i/,
         use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
           {
-            loader: "file-loader",
-            query: {
-              name: `assets/img/[name]${isProdMode ? ".[hash]" : ""}.[ext]`
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[local]-[hash:base64]",
+              minimize: false,
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+        ]
+      },
+      {
+        test: /\.scss|sass$i/,
+        use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[local]-[hash:base64]",
+              minimize: false,
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
             }
           }
         ]
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/,
+        test: /\.less$i/,
         use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[local]-[hash:base64]",
+              minimize: false,
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: [
+         {
+           loader: "file-loader",
+           options: {
+             name: `assets/img/[name].[hash].[ext]`,
+           },
+         },
+       ],
+     },
+     {
+       test: /\.(woff|woff2|(o|t)tf|eot)$/i,
+       use: [
           {
             loader: "file-loader",
             query: {
-              name: `assets/fonts/[name]${isProdMode ? ".[hash]" : ""}.[ext]`
-            }
-          }
-        ]
-      }
+              name: `assets/fonts/[name].[hash].[ext]`,
+            },
+          },
+        ],
+     }
     ]
   },
-  name: "server",
-  output: {
-    filename: "../server.js",
-    libraryTarget: "commonjs2",
-    path: path.resolve(__dirname, "..", "..", "dist", "public"),
-    publicPath: "/"
+  target: "node",
+  node: {
+    __filename: true,
+    __dirname: true,
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1
+    new MiniCssExtractPlugin({
+      chunkFilename: "assets/css/[id].css",
+      filename: "assets/css/[name].css",
     }),
-    new webpack.BannerPlugin({
-      banner: `require("source-map-support").install();`,
-      entryOnly: false,
-      include: ["server.js"],
-      raw: true
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
     }),
     new webpack.DefinePlugin({
-      GRAPHQL: JSON.stringify(process.env.GRAPHQL),
-      SERVER: true,
-    })
-  ],
-  resolve: {
-    modules: [path.resolve(__dirname, "..", "..", "node_modules")]
-  },
-  target: "node"
-};
+      'SERVER': JSON.stringify(true)
+    }),
+  ]
+});
 
-/** merge client with common */
-const mergedServer = merge(common,server);
-
-/** dev config */
-if(process.env.NODE_ENV === 'development'){
-  mergedServer.devtool = 'inline-source-map';
-}
-
-/** prod config */
-if(process.env.NODE_ENV === 'production'){
-  mergedServer.devtool = 'source-map';
-}
-
-// EXPORTS
-module.exports =  mergedServer;
+module.exports = config;
