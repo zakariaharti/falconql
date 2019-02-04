@@ -286,6 +286,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/cookie-parser@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@types/cookie-parser/-/cookie-parser-1.4.1.tgz#e88a39c41960f31549b4c52dd8620aa4a2feb4bb"
+  integrity sha512-iJY6B3ZGufLiDf2OCAgiAAQuj1sMKC/wz/7XCEjZ+/MDuultfFJuSwrBKcLSmJ5iYApLzCCYBYJZs0Ws8GPmwA==
+  dependencies:
+    "@types/express" "*"
+
 "@types/cookies@*":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@types/cookies/-/cookies-0.7.1.tgz#f9f204bd6767d389eea3b87609e30c090c77a540"
@@ -295,6 +302,13 @@
     "@types/express" "*"
     "@types/keygrip" "*"
     "@types/node" "*"
+
+"@types/cors@^2.8.4":
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.4.tgz#50991a759a29c0b89492751008c6af7a7c8267b0"
+  integrity sha512-ipZjBVsm2tF/n8qFGOuGBkUij9X9ZswVi9G3bx/6dz7POpVa6gVHcj1wsX/LVEn9MMF41fxK/PnZPPoTD1UFPw==
+  dependencies:
+    "@types/express" "*"
 
 "@types/dotenv@^6.1.0":
   version "6.1.0"
@@ -437,6 +451,13 @@
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/@types/loglevel/-/loglevel-1.5.3.tgz#adfce55383edc5998a2170ad581b3e23d6adb5b8"
   integrity sha512-TzzIZihV+y9kxSg5xJMkyIkaoGkXi50isZTtGHObNHRqAAwjGNjSCNPI7AUAv0tZUKTq9f2cdkCUd/2JVZUTrA==
+
+"@types/lusca@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@types/lusca/-/lusca-1.5.0.tgz#98a9c4f1cd93639f1a5e33bbf38db3028c2ae0d2"
+  integrity sha512-D7qjH0/ViouQWEU3GjSnUgyGeTN5ULZnTf8j3HCYpjnVaj/APJ4DXMeUHKVoutqwyDmScZBKOtGpKielNOcaeQ==
+  dependencies:
+    "@types/express" "*"
 
 "@types/memory-fs@*":
   version "0.3.2"
