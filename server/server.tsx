@@ -31,7 +31,7 @@ const port = process.env.PORT || 4000;
 const host = process.env.HOST || 'localhost';
 
 // Load env vars, for the `GRAPHQL` endpoint and anything else we need
-require("dotenv").config();
+// require("dotenv").config();
 
 // Router
 const router = new KoaRouter()
