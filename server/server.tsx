@@ -5,175 +5,176 @@
 
 /* NPM */
 
-import * as React from "react";
-import { Context } from "koa";
-import { ApolloProvider, getDataFromTree } from "react-apollo";
-import * as ReactDOMServer from "react-dom/server";
-import { StaticRouter } from "react-router";
-import * as Koa from "koa";
-import * as koaCors from "@koa/cors";
-import * as KoaRouter from "koa-router";
-// @ts-ignore
-import * as webpack from "webpack";
-import * as KoaWebpack from "koa-webpack";
+import * as express from 'express';
+import * as morgan from 'morgan';
+import * as cors  from "cors";
+import * as helmet from 'helmet';
+import * as lusca from 'lusca';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
+import * as bodyParser from 'body-parser';
+import * as compression from 'compression';
+import * as dotenv from 'dotenv';
+import * as chalk from 'chalk';
+import * as errorHandler from 'errorhandler';
+
+// React and Apollo GraphQL and Styled-Components support
+import * as React from 'react';
+import { renderToString } from "react-dom/server";
+import { StaticRouter } from 'react-router-dom';
+import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import { ServerStyleSheet, StyleSheetManager } from "styled-components";
 
 /** LOCAL */
-
 import App from "../client/modules/App/App";
 import { createClient } from "../client/graphql";
 import { renderer } from "../lib/renderer";
 
 // ----------------------------------------------------------------------------
-// const isProdMode = process.env.NODE_ENV === 'production' || false;
-const isDevMode = process.env.NODE_ENV === 'development';
-const port = process.env.PORT || 4000;
-const host = process.env.HOST || 'localhost';
 
-// Load env vars, for the `GRAPHQL` endpoint and anything else we need
-// require("dotenv").config();
+/**
+ * loading environment variables where api keys and other options is configured
+ */
+ dotenv.load();
 
-// Router
-const router = new KoaRouter()
-  .get("/ping", async ctx => {
-    ctx.body = "pong";
-  })
-  .get("/favicon.ico", async ctx => {
-    ctx.status = 204;
-  });
+ /**
+  * create express server instance
+  */
+const app = express();
 
-// Koa instance
-const app = new Koa()
+// Set Development modes checks
+const isDevMode = process.env.NODE_ENV === 'development' || false;
+const isProdMode = process.env.NODE_ENV === 'production' || false;
 
-  // CORS
-app.use(koaCors());
-
-  // Error catcher
-app.use(async (ctx, next) => {
-  try {
-    await next();
-  } catch (e) {
-    console.log("Error:", e);
-    ctx.status = 500;
-    ctx.body = "There was an error. Please try again later.";
-  }
-});
-
-app.use(router.allowedMethods()).use(router.routes());
-
-// in development mode use webpack-dev-server
+// Run Webpack dev server in development mode
 if (isDevMode) {
-   const webpack = require('webpack');
-   const config = require('../webpack/client.js');
-   const compiler = webpack(config);
+  // Webpack Requirements
+  const webpack = require('webpack');
+  const config = require('../webpack/client');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const compiler = webpack(config);
 
-   app.use(async () => {
-     await KoaWebpack({
-       compiler,
-       devMiddleware: {
-         logLevel: "info",
-         publicPath: "/",
-         stats: {
-           all: undefined,
-           assets: true,
-           builtAt: true,
-           cached: true,
-           cachedAssets: true,
-           children: true,
-           chunks: true,
-           chunkModules: true,
-           chunkOrigins: true,
-           colors: true,
-           depth: false,
-           entrypoints: true,
-           env: true,
-           errors: true,
-           errorDetails: true,
-           hash: true,
-           modules: true,
-           moduleTrace: true,
-           performance: true,
-           publicPath: true,
-           reasons: true,
-           timings: true,
-           version: true,
-           warnings: true,
-         }
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath,
+  }));
+  app.use(webpackHotMiddleware(compiler));
+}
+
+/**
+  * express configuration
+  */
+app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
+app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
+app.use(compression());
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: process.env.SESSION_SECRET || 'secret',
+  cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
+}));
+app.use(lusca.csrf());
+app.use(lusca.xframe('SAMEORIGIN'));
+app.use(lusca.xssProtection(true));
+app.use(helmet());
+app.use(cors());
+app.use(cookieParser());
+
+/**
+ * Example routes
+ */
+app.use('/ping', (_req, res) => {
+  res.end('pong');
+});
+
+/**
+ * server side rendering of React & Redux
+ */
+app.use(async (req, res, next) => {
+  try {
+    // Create a new Apollo client
+    const client = createClient();
+
+    // styled-components ssr support
+   const sheet = new ServerStyleSheet();
+
+    // Create a fresh 'context' for React Router
+    const routerContext: any = {};
+
+    // Render our components - passing down MobX state, a GraphQL client,
+    // and a router for rendering based on our route config
+    const components = (
+        <StyleSheetManager sheet={sheet}>
+          <ApolloProvider client={client}>
+            <StaticRouter location={req.path} context={routerContext}>
+              <App />
+            </StaticRouter>
+          </ApolloProvider>
+        </StyleSheetManager>
+    );
+
+    // Await GraphQL data coming from the API server
+    await getDataFromTree(components);
+
+    // if a <Redirect /> is encoutered
+       if(routerContext.url){
+         res.redirect(routerContext.url);
        }
-     });
-   });
-}
 
-// Types
-export interface IRouterContext {
-  status?: number;
-  url?: string;
-}
+       // if notFound encoutered
+       if(routerContext.notFound){
+         res.status(404);
+       }
 
-app.use(async (ctx: Context) => {
-  // Create a new Apollo client
-  const client = createClient();
+    // Create response HTML
+    const html = renderToString(components);
 
-  // styled-components ssr support
- const sheet = new ServerStyleSheet();
+    // Create the React render, and inject the `<head>` section
+    // courtesy of React Helmet.
+    const finalView = renderer(html, {}, client.extract(), sheet);
 
-  // Create a fresh 'context' for React Router
-  const routerContext: IRouterContext = {};
-
-  // Render our components - passing down MobX state, a GraphQL client,
-  // and a router for rendering based on our route config
-  const components = (
-      <StyleSheetManager sheet={sheet}>
-        <ApolloProvider client={client}>
-          <StaticRouter location={ctx.request.url} context={routerContext}>
-            <App />
-          </StaticRouter>
-        </ApolloProvider>
-      </StyleSheetManager>
-  );
-
-  // Await GraphQL data coming from the API server
-  await getDataFromTree(components);
-
-  // Handle 301/302 redirects
-  if ([301, 302].includes(routerContext.status!)) {
-    // 301 = permanent redirect, 302 = temporary
-    ctx.status = routerContext.status!;
-
-    // Issue the new `Location:` header
-    ctx.redirect(routerContext.url!);
-
-    // Return early -- no need to set a response body
-    return;
+    // Set the return type to `text/html`, and dump the response back to
+    // the client
+    // else send back the response
+      res
+       .set('Content-Type','text/html')
+       .status(200)
+       .end(finalView);
+  }catch (e){
+    next(e);
   }
-
-  // Handle 404 `Not Found`
-  if (routerContext.status === 404) {
-    // By default, just set the status code to 404. You can
-    // modify this section to do things like log errors to a
-    // third-party, or redirect users to a dedicated 404 page
-
-    ctx.status = 404;
-    ctx.body = "Not found";
-
-    return;
-  }
-
-  // Create response HTML
-  const html = ReactDOMServer.renderToString(components);
-
-  // Create the React render, and inject the `<head>` section
-  // courtesy of React Helmet.
-  const finalView = renderer(html, {}, client.extract(), sheet);
-
-  // Set the return type to `text/html`, and dump the response back to
-  // the client
-  ctx.type = "text/html";
-  ctx.status = 200;
-  ctx.body = `${finalView}`;
 });
 
-// start listening
-app.listen({ port, host}, () => {
-  console.log(`Server running on ${host}:${port}`);
+/**
+ * Error Handler.
+ */
+if (!isProdMode) {
+  // only use in development
+  app.use(errorHandler());
+} else {
+  app.use((
+    err: express.Errback,
+    // @ts-ignore
+    _req: express.Request,
+    res: express.Response,
+    // @ts-ignore
+    _next: express.NextFunction
+  ) => {
+    console.error(err);
+    res.status(500).send('Server Error');
+  });
+}
+
+/**
+ * Start Express server.
+ */
+app.listen(app.get('port'), () => {
+  // @ts-ignore
+  console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
+  console.log('Press CTRL-C to stop\n');
 });
+
+module.exports = app;
