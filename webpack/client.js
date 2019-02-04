@@ -68,9 +68,7 @@ const client = {
           chunks: "all",
           enforce: true,
           name: "main",
-          test: new RegExp(
-            `\\.${css.ules.map(rule => `(${rule.ext})`).join("|")}$`
-          )
+          test: new RegExp(`\\.css|sass|scss|less`)
         }
       }
     }

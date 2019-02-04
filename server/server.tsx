@@ -25,7 +25,8 @@ import { createClient } from "../client/graphql";
 import { renderer } from "../lib/renderer";
 
 // ----------------------------------------------------------------------------
-const isProdMode = process.env.NODE_ENV === 'production' || false;
+// const isProdMode = process.env.NODE_ENV === 'production' || false;
+const isDevMode = process.env.NODE_ENV === 'development';
 const port = process.env.PORT || 4000;
 const host = process.env.HOST || 'localhost';
 
@@ -61,7 +62,7 @@ app.use(async (ctx, next) => {
 app.use(router.allowedMethods()).use(router.routes());
 
 // in development mode use webpack-dev-server
-if (!isProdMode) {
+if (isDevMode) {
    const webpack = require('webpack');
    const config = require('../webpack/client.js');
    const compiler = webpack(config);
@@ -72,7 +73,32 @@ if (!isProdMode) {
        devMiddleware: {
          logLevel: "info",
          publicPath: "/",
-         stats: false
+         stats: {
+           all: undefined,
+           assets: true,
+           builtAt: true,
+           cached: true,
+           cachedAssets: true,
+           children: true,
+           chunks: true,
+           chunkModules: true,
+           chunkOrigins: true,
+           colors: true,
+           depth: false,
+           entrypoints: true,
+           env: true,
+           errors: true,
+           errorDetails: true,
+           hash: true,
+           modules: true,
+           moduleTrace: true,
+           performance: true,
+           publicPath: true,
+           reasons: true,
+           timings: true,
+           version: true,
+           warnings: true,
+         }
        }
      });
    });
