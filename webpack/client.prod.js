@@ -1,119 +1,169 @@
-// Webpack (CSS style loading)
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const path = require('path');
+const CompressionPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('compression-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const ChunkManifestPlugin = require('chunk-manifest-webpack-plugin');
 
-// ----------------------------------------------------------------------------
-// IMPORTS
+const common = require('./webpack.common');
 
-/* NPM */
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-// ----------------------------------------------------------------------------
-
-// Returns string RegEx and modules settings based on style file extension
-function getExtensionSettings(ext) {
-  return [
-    [`^(?!.*\\.global\\.${ext}$).*\\.${ext}$`, { modules: true }],
-    [`\\.global\\.${ext}$`, { modules: false }]
-  ];
-}
-
-// Rules configuration for each style file extension
-const rules = [
-  {
-    ext: "css",
-    use: []
+const config = merge(common,{
+  mode: 'production',
+  devtool: "hidden-source-map",
+  entry: [
+    path.resolve('.','client','client.tsx')
+  ],
+  output: {
+    chunkFilename: "assets/js/[name].[chunkhash].js",
+    filename: "assets/js/[name].[chunkhash].js",
+    path: path.resolve('.','build','public')
   },
-  {
-    ext: "s(c|a)ss",
-    use: [
+  module: {
+    rules: [
       {
-        loader: "resolve-url-loader"
+        test: /\.css$/,
+        use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[local]-[hash:base64]",
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+        ]
       },
       {
-        loader: "sass-loader",
-        options: {
-          sourceMap: true
-        }
-      }
+        test: /\.(scss|sass)$/,
+        use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[local]-[hash:base64]",
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            }
+          }
+        ]
+      },
+      {
+        test: /\.less$/,
+        use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[local]-[hash:base64]",
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              sourceMap: true,
+            }
+          },
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        use: [
+         {
+           loader: "file-loader",
+           options: {
+             name: `assets/img/[name].[hash].[ext]`,
+           },
+         },
+       ],
+     },
+     {
+       test: /\.(woff|woff2|(o|t)tf|eot)$/,
+       use: [
+          {
+            loader: "file-loader",
+            query: {
+              name: `assets/fonts/[name].[hash].[ext]`,
+            },
+          },
+        ],
+     }
     ]
   },
-  {
-    ext: "less",
-    use: ["less-loader"]
-  }
-];
-
-const isProduction = process.env.NODE_ENV === "production";
-
-// Create generator to get rules
-exports.css = function* (isClient = true) {
-  // Source maps depend on us being in development
-  const sourceMap = !isProduction;
-
-  for (const loader of rules) {
-    // Iterate over CSS/SASS/LESS and yield local and global mod configs
-    for (const [test, modules] of getExtensionSettings(loader.ext)) {
-      // Build the use rules
-      const use = [
-        // CSS hot loading on the client, in development
-        isClient && !isProduction && "css-hot-loader",
-
-        // Add MiniCSS if we're on the client
-        isClient && MiniCssExtractPlugin.loader,
-
-        // Set-up `css-loader`
-        {
-          // If we're on the server, we only want to output the name
-          // loader: isClient ? "css-loader" : "css-loader/locals",
-          loader: "css-loader",
-
-          options: {
-            // Calculate how many loaders follow this one
-            importLoaders: loader.use.length + 1,
-
-            // Format for 'localised' CSS modules
-            localIdentName: "[local]-[hash:base64]",
-
-            // Add sourcemaps if we're in dev
-            sourceMap,
-
-            // Specify modules options
-            ...modules
-          }
-        },
-
-        // Add PostCSS
-        {
-          loader: "postcss-loader",
-          options: {
-            ident: "postcss",
-            plugins() {
-              return [
-                require("postcss-preset-env")({
-                  features: {
-                    autoprefixer: false
-                  }
-                }),
-                require("cssnano")()
-              ];
-            },
-            // Enable sourcemaps in development
-            sourceMap
-          }
-        },
-
-        // Copy over the loader's specific rules
-        ...loader.use
-      ];
-
-      // Yield the full rule
-      yield {
-        test: new RegExp(test),
-
-        // Remove all falsy values
-        use: use.filter(l => l)
-      };
+  node: {
+    console: true,
+    fs: "empty",
+    net: "empty",
+    tls: "empty",
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.(css|s(c|a)ss|less)$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
     }
-  }
-};
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      chunkFilename: "assets/css/[id].css",
+      filename: "assets/css/app.[contenthash].css",
+    }),
+    new CompressionPlugin({
+      cache: true,
+      minRatio: 0.99,
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production'),
+      },
+      'CLIENT': JSON.stringify(true)
+    }),
+    new ManifestPlugin({
+      basePath: '/',
+    }),
+    new ChunkManifestPlugin({
+      filename: "chunk-manifest.json",
+      manifestVariable: "webpackManifest",
+    }),
+  ]
+});
 
-module.exports = rules;
+module.exports = config;
