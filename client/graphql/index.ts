@@ -11,6 +11,7 @@ import { HttpLink } from "apollo-link-http";
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import * as ws from 'ws';
 
 /** LOCAL */
 import createState from './state';
@@ -40,7 +41,7 @@ export const createClient = (): ApolloClient<NormalizedCacheObject> => {
   const wsLink = new WebSocketLink(
     new SubscriptionClient(process.env.GRAPHQL.replace(/^https?/, "ws"), {
       reconnect: true // <-- automatically redirect as needed
-    })
+    }, ws)
   );
 
   // if we are in the browser use the __APOLLO_STATE__ global variable
