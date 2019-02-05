@@ -17,6 +17,7 @@ import * as compression from 'compression';
 import * as dotenv from 'dotenv';
 import * as chalk from 'chalk';
 import * as errorHandler from 'errorhandler';
+import 'cross-fetch/polyfill';
 
 // React and Apollo GraphQL and Styled-Components support
 import * as React from 'react';
