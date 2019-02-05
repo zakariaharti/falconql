@@ -47,7 +47,8 @@ export const createClient = (): ApolloClient<NormalizedCacheObject> => {
   // if we are in the browser use the __APOLLO_STATE__ global variable
   // it contains the data sent by server to the client se we can restore and use it
   if(!process.env.SERVER){
-    cache.restore((window as any).__APOLLO_STATE__);
+    // @ts-ignore
+    cache.restore(window.__APOLLO_STATE__);
   }
 
   // Return a new Apollo Client back, with the cache we've just created,
