@@ -1,4 +1,4 @@
-# FalconQl
+# FalconQl ( still in development )
 
 Universal full-stack Node.js + React + GraphQL starter kit, written in Typescript.
 
